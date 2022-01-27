@@ -1,0 +1,1 @@
+/Users/radko93/Repo/react-native-sodium/android/build/intermediates/cmake/debug/obj/arm64-v8a

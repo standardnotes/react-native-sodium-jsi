@@ -1,0 +1,4 @@
+ninja: Entering directory `/Users/radko93/Repo/react-native-sodium/android/.cxx/cmake/debug/arm64-v8a'
+[1/3] Building CXX object CMakeFiles/cpp.dir/Users/radko93/Repo/react-native-sodium/cpp/example.cpp.o
+[2/3] Building CXX object CMakeFiles/cpp.dir/cpp-adapter.cpp.o
+[3/3] Linking CXX shared library ../../../../build/intermediates/cmake/debug/obj/arm64-v8a/libcpp.so

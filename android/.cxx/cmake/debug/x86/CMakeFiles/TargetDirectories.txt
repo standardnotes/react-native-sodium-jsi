@@ -1,0 +1,3 @@
+/Users/radko93/Repo/react-native-sodium/android/.cxx/cmake/debug/x86/CMakeFiles/rebuild_cache.dir
+/Users/radko93/Repo/react-native-sodium/android/.cxx/cmake/debug/x86/CMakeFiles/edit_cache.dir
+/Users/radko93/Repo/react-native-sodium/android/.cxx/cmake/debug/x86/CMakeFiles/cpp.dir

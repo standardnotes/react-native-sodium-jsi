@@ -1,0 +1,4 @@
+# ninja log v5
+0	57	1633276814	CMakeFiles/cpp.dir/Users/radko93/Repo/react-native-sodium/cpp/example.cpp.o	8def724d4e80b303
+0	63	1633276814	CMakeFiles/cpp.dir/cpp-adapter.cpp.o	e1cc89dcc89081e7
+63	114	1633276814	../../../../build/intermediates/cmake/debug/obj/x86/libcpp.so	ad45946e9d0994bc

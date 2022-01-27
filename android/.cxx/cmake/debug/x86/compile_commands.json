@@ -1,0 +1,13 @@
+[
+{
+  "directory": "/Users/radko93/Repo/react-native-sodium/android/.cxx/cmake/debug/x86",
+  "command": "/Users/radko93/Library/Android/sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang++ --target=i686-none-linux-android16 --gcc-toolchain=/Users/radko93/Library/Android/sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/darwin-x86_64 --sysroot=/Users/radko93/Library/Android/sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/darwin-x86_64/sysroot  -Dcpp_EXPORTS -I../../../../../cpp  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -mstackrealign -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O2 -frtti -fexceptions -Wall -fstack-protector-all -O0 -fno-limit-debug-info  -fPIC   -std=gnu++11 -o CMakeFiles/cpp.dir/Users/radko93/Repo/react-native-sodium/cpp/example.cpp.o -c /Users/radko93/Repo/react-native-sodium/cpp/example.cpp",
+  "file": "/Users/radko93/Repo/react-native-sodium/cpp/example.cpp"
+},
+
+{
+  "directory": "/Users/radko93/Repo/react-native-sodium/android/.cxx/cmake/debug/x86",
+  "command": "/Users/radko93/Library/Android/sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang++ --target=i686-none-linux-android16 --gcc-toolchain=/Users/radko93/Library/Android/sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/darwin-x86_64 --sysroot=/Users/radko93/Library/Android/sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/darwin-x86_64/sysroot  -Dcpp_EXPORTS -I../../../../../cpp  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -mstackrealign -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O2 -frtti -fexceptions -Wall -fstack-protector-all -O0 -fno-limit-debug-info  -fPIC   -std=gnu++11 -o CMakeFiles/cpp.dir/cpp-adapter.cpp.o -c /Users/radko93/Repo/react-native-sodium/android/cpp-adapter.cpp",
+  "file": "/Users/radko93/Repo/react-native-sodium/android/cpp-adapter.cpp"
+}
+]

@@ -1,0 +1,40 @@
+{
+  "stringTable": {},
+  "buildFiles": [
+    "/Users/radko93/Repo/react-native-sodium/android/CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "/Users/radko93/Library/Android/sdk/cmake/3.10.2.4988404/bin/ninja",
+      "-C",
+      "/Users/radko93/Repo/react-native-sodium/android/.cxx/cmake/debug/x86",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "/Users/radko93/Library/Android/sdk/cmake/3.10.2.4988404/bin/ninja",
+    "-C",
+    "/Users/radko93/Repo/react-native-sodium/android/.cxx/cmake/debug/x86",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {
+    "cpp-Debug-x86": {
+      "buildCommandComponents": [
+        "/Users/radko93/Library/Android/sdk/cmake/3.10.2.4988404/bin/ninja",
+        "-C",
+        "/Users/radko93/Repo/react-native-sodium/android/.cxx/cmake/debug/x86",
+        "cpp"
+      ],
+      "buildType": "debug",
+      "abi": "x86",
+      "artifactName": "cpp",
+      "output": "/Users/radko93/Repo/react-native-sodium/android/build/intermediates/cmake/debug/obj/x86/libcpp.so",
+      "runtimeFiles": []
+    }
+  },
+  "toolchains": {},
+  "cFileExtensions": [],
+  "cppFileExtensions": [
+    "cpp"
+  ]
+}
