@@ -166,6 +166,8 @@ void install(jsi::Runtime& jsiRuntime) {
         jsi::PropNameID::forAscii(jsiRuntime, "crypto_aead_xchacha20poly1305_ietf_decrypt"),
         4,  // 4 arguments (ciphertext as base64 string, nonce as hex string, key as hex string, assoc_data as utf8 string)
         [](jsi::Runtime& runtime, const jsi::Value& thisValue, const jsi::Value* arguments, size_t count) -> jsi::Value {
+            
+            
           if (arguments[0].isNull() || arguments[1].isNull() || arguments[2].isNull()) {
               jsi::detail::throwJSError(runtime, "[react-native-sodium] crypto_aead_xchacha20poly1305_ietf_decrypt arguments are null");
               return {};
@@ -201,43 +203,43 @@ void install(jsi::Runtime& jsiRuntime) {
         }
     );
     jsiRuntime.global().setProperty(jsiRuntime, "crypto_aead_xchacha20poly1305_ietf_decrypt", std::move(jsi_crypto_aead_xchacha20poly1305_ietf_decrypt));
-    
 
+
+    
+    
     auto jsi_crypto_pwhash = jsi::Function::createFromHostFunction(
         jsiRuntime,
         jsi::PropNameID::forAscii(jsiRuntime, "crypto_pwhash"),
-        5,
+        5,  // 5 arguments (desiredKeyLength as int, password as utf8 string, salt as hex string, iterations as int, memLimit as int)
         [](jsi::Runtime& runtime, const jsi::Value& thisValue, const jsi::Value* arguments, size_t count) -> jsi::Value {
             if (arguments[0].isNull() || arguments[1].isNull() || arguments[2].isNull() || arguments[3].isNull() || arguments[4].isNull()) {
                 jsi::detail::throwJSError(runtime, "[react-native-sodium] jsi_crypto_pwhash arguments are null");
             }
-
+            
             unsigned long long length = arguments[0].asNumber();
             std::string password = arguments[1].asString(runtime).utf8(runtime);
             std::vector<uint8_t> salt = hexToBin(runtime, arguments[2].asString(runtime).utf8(runtime));
             unsigned long long iterations = arguments[3].asNumber();
             unsigned long long bytes = arguments[4].asNumber();
-
-            if (length == 0)
-                length = crypto_pwhash_argon2id_BYTES_MAX;
+            
             if (length < crypto_pwhash_argon2id_BYTES_MIN || length > crypto_pwhash_argon2id_BYTES_MAX) {
                 jsi::detail::throwJSError(runtime, "[react-native-sodium] crypto_pwhash wrong output length");
             }
             if (salt.size() != crypto_pwhash_argon2id_SALTBYTES) {
                 jsi::detail::throwJSError(runtime, "[react-native-sodium] crypto_pwhash wrong salt length");
             }
-
-            uint8_t ret[length];
-
-            int result = crypto_pwhash(ret, length, password.data(), password.size(), salt.data(), iterations, bytes, crypto_pwhash_ALG_ARGON2ID13);
+            
+            std::vector<uint8_t> ret;
+            ret.resize(length);
+            
+            int result = crypto_pwhash(ret.data(), length, password.data(), password.size(), salt.data(), iterations, bytes, crypto_pwhash_ALG_ARGON2ID13);
             if (result != 0) {
                 return jsi::Value(nullptr);
             }
            else {
-               return jsi::String::createFromUtf8(runtime, binToHex(ret, length));
+               // returns hex string
+               return jsi::String::createFromUtf8(runtime, binToHex(ret.data(), length));
            }
-            
-            return jsi::Value(nullptr);
         }
     );
     jsiRuntime.global().setProperty(jsiRuntime, "crypto_pwhash", std::move(jsi_crypto_pwhash));
@@ -252,17 +254,17 @@ void install(jsi::Runtime& jsiRuntime) {
             if (arguments[0].isNull()) {
                 jsi::detail::throwJSError(runtime, "[react-native-sodium] crypto_secretstream_xchacha20poly1305_init_push arguments are null");
             }
-
+        
             std::vector<uint8_t> k = hexToBin(runtime, arguments[0].asString(runtime).utf8(runtime));
             if (k.size() != crypto_secretstream_xchacha20poly1305_keybytes()) {
                 jsi::detail::throwJSError(runtime, "[react-native-sodium] crypto_secretstream_xchacha20poly1305_init_push wrong key length");
             }
-
+            
             jsi::Value arraybuf = createArrayBuffer(runtime, sizeof(crypto_secretstream_xchacha20poly1305_state));
             auto st = extractArrayBuffer<crypto_secretstream_xchacha20poly1305_state>(runtime, arraybuf);
-
+            
             uint8_t header[crypto_secretstream_xchacha20poly1305_HEADERBYTES];
-
+            
             int result = crypto_secretstream_xchacha20poly1305_init_push(st, header, k.data());
             if (result != 0) {
                 return jsi::Value(nullptr);
@@ -277,7 +279,7 @@ void install(jsi::Runtime& jsiRuntime) {
         }
     );
     jsiRuntime.global().setProperty(jsiRuntime, "crypto_secretstream_xchacha20poly1305_init_push", std::move(jsi_crypto_secretstream_xchacha20poly1305_init_push));
-
+    
     auto jsi_crypto_secretstream_xchacha20poly1305_push = jsi::Function::createFromHostFunction(
         jsiRuntime,
         jsi::PropNameID::forAscii(jsiRuntime, "crypto_secretstream_xchacha20poly1305_push"),
@@ -286,16 +288,16 @@ void install(jsi::Runtime& jsiRuntime) {
             if (arguments[0].isNull()) {
                 jsi::detail::throwJSError(runtime, "[react-native-sodium] crypto_secretstream_xchacha20poly1305_push arguments are null");
             }
-
+            
             auto* st = extractArrayBuffer<crypto_secretstream_xchacha20poly1305_state>(runtime, arguments[0]);
             jsi::ArrayBuffer message = asArrayBuffer(runtime, arguments[1]);
             std::string assoc_data = arguments[2].asString(runtime).utf8(runtime);
             uint8_t tag = arguments[3].asNumber();
-
+            
             size_t ret_size = crypto_secretstream_xchacha20poly1305_ABYTES + message.size(runtime);
             jsi::Value ret = createArrayBuffer(runtime, ret_size);
             uint8_t* ret_ptr = extractArrayBuffer(runtime, ret, ret_size);
-
+            
             int result = crypto_secretstream_xchacha20poly1305_push(st, ret_ptr, nullptr, message.data(runtime), message.size(runtime), (uint8_t*)assoc_data.data(), assoc_data.size(), tag);
             if (result != 0) {
                 return jsi::Value(nullptr);
@@ -306,10 +308,10 @@ void install(jsi::Runtime& jsiRuntime) {
            }
         }
     );
-    jsiRuntime.global().setProperty(jsiRuntime, "crypto_secretstream_xchacha20poly1305_push", std::move(jsi_crypto_secretstream_xchacha20poly1305_init_push));
-
-
-
+    jsiRuntime.global().setProperty(jsiRuntime, "crypto_secretstream_xchacha20poly1305_push", std::move(jsi_crypto_secretstream_xchacha20poly1305_push));
+    
+    
+    
     auto jsi_crypto_secretstream_xchacha20poly1305_init_pull = jsi::Function::createFromHostFunction(
         jsiRuntime,
         jsi::PropNameID::forAscii(jsiRuntime, "crypto_secretstream_xchacha20poly1305_init_pull"),
@@ -318,20 +320,20 @@ void install(jsi::Runtime& jsiRuntime) {
             if (arguments[0].isNull()) {
                 jsi::detail::throwJSError(runtime, "[react-native-sodium] crypto_secretstream_xchacha20poly1305_init_pull arguments are null");
             }
-
+            
             std::vector<uint8_t> header = base64ToBin(runtime, arguments[1].asString(runtime).utf8(runtime));
             if (header.size() != crypto_secretstream_xchacha20poly1305_HEADERBYTES) {
                 jsi::detail::throwJSError(runtime, "[react-native-sodium] crypto_secretstream_xchacha20poly1305_init_pull wrong header length");
             }
-
+            
             std::vector<uint8_t> key = hexToBin(runtime, arguments[0].asString(runtime).utf8(runtime));
             if (key.size() != crypto_secretstream_xchacha20poly1305_keybytes()) {
                 jsi::detail::throwJSError(runtime, "[react-native-sodium] crypto_secretstream_xchacha20poly1305_init_push wrong key length");
             }
-
+            
             jsi::Value arraybuf = createArrayBuffer(runtime, sizeof(crypto_secretstream_xchacha20poly1305_state));
             auto st = extractArrayBuffer<crypto_secretstream_xchacha20poly1305_state>(runtime, arraybuf);
-
+            
             int result = crypto_secretstream_xchacha20poly1305_init_pull(st, header.data(), key.data());
             if (result != 0) {
                 return jsi::Value(nullptr);
@@ -343,8 +345,8 @@ void install(jsi::Runtime& jsiRuntime) {
         }
     );
     jsiRuntime.global().setProperty(jsiRuntime, "crypto_secretstream_xchacha20poly1305_init_pull", std::move(jsi_crypto_secretstream_xchacha20poly1305_init_pull));
-
-
+    
+    
     auto jsi_crypto_secretstream_xchacha20poly1305_pull = jsi::Function::createFromHostFunction(
         jsiRuntime,
         jsi::PropNameID::forAscii(jsiRuntime, "crypto_secretstream_xchacha20poly1305_pull"),
@@ -353,18 +355,18 @@ void install(jsi::Runtime& jsiRuntime) {
             if (arguments[0].isNull()) {
                 jsi::detail::throwJSError(runtime, "[react-native-sodium] crypto_secretstream_xchacha20poly1305_pull arguments are null");
             }
-
+            
             auto* st = extractArrayBuffer<crypto_secretstream_xchacha20poly1305_state>(runtime, arguments[0]);
             jsi::ArrayBuffer ciphertext = asArrayBuffer(runtime, arguments[1]);
             std::string assoc_data = arguments[2].asString(runtime).utf8(runtime);
-
+            
             if (ciphertext.size(runtime) < crypto_secretstream_xchacha20poly1305_ABYTES)
                 jsi::detail::throwJSError(runtime, "[react-native-sodium] crypto_secretstream_xchacha20poly1305_pull too short ciphertext");
             size_t ret_size = ciphertext.size(runtime) - crypto_secretstream_xchacha20poly1305_ABYTES;
             jsi::Value ret = createArrayBuffer(runtime, ret_size);
             uint8_t* ret_ptr = extractArrayBuffer(runtime, ret, ret_size);
             uint8_t tag;
-
+            
             int result = crypto_secretstream_xchacha20poly1305_pull(st, ret_ptr, nullptr, &tag, ciphertext.data(runtime), ciphertext.size(runtime), (uint8_t*)assoc_data.data(), assoc_data.size());
             if (result != 0) {
                 return jsi::Value(nullptr);
@@ -380,6 +382,8 @@ void install(jsi::Runtime& jsiRuntime) {
     );
     jsiRuntime.global().setProperty(jsiRuntime, "crypto_secretstream_xchacha20poly1305_pull", std::move(jsi_crypto_secretstream_xchacha20poly1305_pull));
     
+    
+
 }
 
 void cleanup() {}
