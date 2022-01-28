@@ -60,10 +60,21 @@ export default function App() {
       aad
     );
     console.log('decrypted', decrypted);
-    // console.log(NativeModules.Sodium);
-    // setResult(global && global.randombytes_random());
-    // testRandom2();
-    // testRandom3();
+
+    const password = 'correct horse battery staple';
+    const salt = '808182838485868788898a8b8c8d8e8f';
+    const bytes = 67108864;
+    const length = 16;
+    const iterations = 2;
+    const result = global.crypto_pwhash(
+      length,
+      password,
+      salt,
+      iterations,
+      bytes
+    );
+    const expectedResult = '720f95400220748a811bca9b8cff5d6e';
+    console.log('Argon result', result, 'expected result', expectedResult);
   }, []);
 
   return (
