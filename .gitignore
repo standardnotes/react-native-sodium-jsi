@@ -41,7 +41,7 @@ android.iml
 android/build
 android/.externalNativeBuild
 android/lib
-# android/.cxx
+android/.cxx
 
 # Cocoapods
 #
