@@ -76,9 +76,9 @@ endif()
 
 target_link_libraries(
         reactnativesodiumjsi
-        sodium
         ${log-lib}
         ${JSI_LIB}
         ${REACT_NATIVE_JNI_LIB}
+        sodium
         android
 )

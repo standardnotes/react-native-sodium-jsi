@@ -15,9 +15,7 @@ public class SodiumPackage implements ReactPackage {
     @NonNull
     @Override
     public List<NativeModule> createNativeModules(@NonNull ReactApplicationContext reactContext) {
-        List<NativeModule> modules = new ArrayList<>();
-        modules.add(new SodiumModule(reactContext));
-        return modules;
+      return Collections.singletonList(new SodiumModule(reactContext));
     }
 
     @NonNull

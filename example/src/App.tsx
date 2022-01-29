@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import { StyleSheet, View, Text, NativeModules } from 'react-native';
+import 'react-native-sodium';
 import base64 from 'base64-js';
 
 const TestResult: React.FC<{ value: boolean | undefined; name: string }> = (
@@ -40,7 +41,8 @@ export default function App() {
 
   React.useEffect(() => {
     const message = 'hello world';
-    const key = '808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9f';
+    const key =
+      '808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9f';
     const nonce = '404142434445464748494a4b4c4d4e4f5051525354555657';
     const aad = key;
 
