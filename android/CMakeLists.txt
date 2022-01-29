@@ -34,13 +34,14 @@ include_directories(
         "${NODE_MODULES_DIR}/react-native/ReactCommon/jsi"
 )
 
-add_library(reactnativesodiumjsihelper
+add_library(reactnativesodiumjsi
         SHARED
+         "../cpp/sodium-jsi.cpp"
         cpp-adapter.cpp
         ${INCLUDE_JSI_CPP}
         )
 set_target_properties(
-        reactnativesodiumjsihelper PROPERTIES
+        reactnativesodiumjsi PROPERTIES
         CXX_STANDARD 14
         CXX_EXTENSIONS OFF
         POSITION_INDEPENDENT_CODE ON
@@ -74,7 +75,8 @@ else()
 endif()
 
 target_link_libraries(
-        reactnativesodiumjsihelper
+        reactnativesodiumjsi
+        sodium
         ${log-lib}
         ${JSI_LIB}
         ${REACT_NATIVE_JNI_LIB}

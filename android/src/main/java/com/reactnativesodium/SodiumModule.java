@@ -29,7 +29,7 @@ public class SodiumModule extends ReactContextBaseJavaModule {
     public boolean install() {
       try {
         Log.i(NAME, "Loading C++ library...");
-        System.loadLibrary("reactnativesodiumjsihelper");
+        System.loadLibrary("reactnativesodiumjsi");
         JavaScriptContextHolder jsContext = getReactApplicationContext().getJavaScriptContextHolder();
         Log.i(NAME, "Installing JSI Bindings...");
         install(jsContext.get(), this);
