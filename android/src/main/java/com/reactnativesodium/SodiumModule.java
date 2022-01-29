@@ -1,7 +1,10 @@
 package com.reactnativesodium;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
+import com.facebook.react.bridge.JavaScriptContextHolder;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -22,20 +25,20 @@ public class SodiumModule extends ReactContextBaseJavaModule {
         return NAME;
     }
 
-    static {
-        try {
-            // Used to load the 'native-lib' library on application startup.
-            System.loadLibrary("cpp");
-        } catch (Exception ignored) {
-        }
+    @ReactMethod(isBlockingSynchronousMethod = true)
+    public boolean install() {
+      try {
+        Log.i(NAME, "Loading C++ library...");
+        System.loadLibrary("reactnativesodiumjsihelper");
+        JavaScriptContextHolder jsContext = getReactApplicationContext().getJavaScriptContextHolder();
+        Log.i(NAME, "Installing JSI Bindings...");
+        install(jsContext.get(), this);
+        return true;
+      } catch (Exception exception) {
+        Log.e(NAME, "Failed to install JSI Bindings!", exception);
+        return false;
+      }
     }
 
-    // Example method
-    // See https://reactnative.dev/docs/native-modules-android
-    @ReactMethod
-    public void multiply(int a, int b, Promise promise) {
-        promise.resolve(nativeMultiply(a, b));
-    }
-
-    public static native int nativeMultiply(int a, int b);
+    public static native void install(long jsiPointer, SodiumModule instance);
 }

@@ -1,8 +1,9 @@
+#include "sodium-jsi.h"
 #include <jni.h>
-#include "example.h"
 
 extern "C"
-JNIEXPORT jint JNICALL
-Java_com_reactnativesodium_SodiumModule_nativeMultiply(JNIEnv *env, jclass type, jint a, jint b) {
-    return example::multiply(a, b);
+JNIEXPORT void JNICALL
+Java_com_reactnativesodium_SodiumModule_install(JNIEnv *env, jclass clazz, jlong jsi_pointer,
+                                                jobject instance) {
+    install(*reinterpret_cast<facebook::jsi::Runtime*>(jsi_pointer));
 }

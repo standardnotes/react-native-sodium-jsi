@@ -27,11 +27,6 @@ if(${REACT_NATIVE_VERSION} LESS 66)
   )
 endif()
 
-add_library(cpp
-            SHARED
-            cpp-adapter.cpp
-)
-
 include_directories(
         "../cpp"
         "${NODE_MODULES_DIR}/react-native/React"
@@ -39,13 +34,13 @@ include_directories(
         "${NODE_MODULES_DIR}/react-native/ReactCommon/jsi"
 )
 
-add_library(reactnativesodiumjsi
+add_library(reactnativesodiumjsihelper
         SHARED
         cpp-adapter.cpp
         ${INCLUDE_JSI_CPP}
         )
 set_target_properties(
-        reactnativesodiumjsi PROPERTIES
+        reactnativesodiumjsihelper PROPERTIES
         CXX_STANDARD 14
         CXX_EXTENSIONS OFF
         POSITION_INDEPENDENT_CODE ON
@@ -79,7 +74,7 @@ else()
 endif()
 
 target_link_libraries(
-        reactnativesodiumjsi
+        reactnativesodiumjsihelper
         ${log-lib}
         ${JSI_LIB}
         ${REACT_NATIVE_JNI_LIB}
