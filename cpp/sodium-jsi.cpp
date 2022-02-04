@@ -1,6 +1,6 @@
 #include "sodium.h"
 #include "sodium-jsi.h"
-#include <android/log.h>
+
 #include <vector>
 #include <string>
 #include <iostream>
