@@ -31,7 +31,7 @@ public class SodiumModule extends ReactContextBaseJavaModule {
         System.loadLibrary("reactnativesodiumjsi");
         JavaScriptContextHolder jsContext = getReactApplicationContext().getJavaScriptContextHolder();
         Log.i(NAME, "Installing JSI Bindings...");
-        install(jsContext.get(), this);
+        install(jsContext.get());
         return true;
       } catch (Exception exception) {
         Log.e(NAME, "Failed to install JSI Bindings!", exception);
@@ -39,5 +39,5 @@ public class SodiumModule extends ReactContextBaseJavaModule {
       }
     }
 
-    public static native void install(long jsiPointer, SodiumModule instance);
+    public static native void install(long jsiPointer);
 }

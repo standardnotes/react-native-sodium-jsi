@@ -20,13 +20,6 @@ include_directories( ${PROJECT_SOURCE_DIR}/../libsodium/libsodium-android-${ARCH
 set_target_properties( sodium PROPERTIES IMPORTED_LOCATION ${PROJECT_SOURCE_DIR}/../libsodium/libsodium-android-${ARCH_DIR}/lib/libsodium.so )
 file(COPY ${PROJECT_SOURCE_DIR}/../libsodium/libsodium-android-${ARCH_DIR}/lib/libsodium.so DESTINATION "${PROJECT_SOURCE_DIR}/lib/${ANDROID_ABI}")
 
-if(${REACT_NATIVE_VERSION} LESS 66)
-  set (
-          INCLUDE_JSI_CPP
-          "${NODE_MODULES_DIR}/react-native/ReactCommon/jsi/jsi/jsi.cpp"
-  )
-endif()
-
 include_directories(
         "../cpp"
         "${NODE_MODULES_DIR}/react-native/React"
@@ -34,10 +27,18 @@ include_directories(
         "${NODE_MODULES_DIR}/react-native/ReactCommon/jsi"
 )
 
+if(${REACT_NATIVE_VERSION} LESS 66)
+  set (
+          INCLUDE_JSI_CPP
+          "${NODE_MODULES_DIR}/react-native/ReactCommon/jsi/jsi/jsi.cpp"
+  )
+endif()
+
 add_library(reactnativesodiumjsi
         SHARED
-         "../cpp/sodium-jsi.cpp"
         cpp-adapter.cpp
+        ../cpp/sodium-jsi.h
+        ../cpp/sodium-jsi.cpp
         ${INCLUDE_JSI_CPP}
         )
 set_target_properties(
@@ -76,9 +77,9 @@ endif()
 
 target_link_libraries(
         reactnativesodiumjsi
+        sodium
         ${log-lib}
         ${JSI_LIB}
         ${REACT_NATIVE_JNI_LIB}
-        sodium
         android
 )
