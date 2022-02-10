@@ -28,24 +28,29 @@ static std::vector<uint8_t> hexToBin(jsi::Runtime& runtime, const std::string& s
     return ret;
 }
 
+void rtrim_null(std::string& str) {
+    str.erase(std::find_if(str.rbegin(), str.rend(), [](int character) {
+        return '\0' != character;
+    }).base(), str.end());
+}
+
 static std::string binToBase64(const uint8_t * buf, size_t len) {
     std::string ret;
     ret.resize(sodium_base64_encoded_len(len, sodium_base64_VARIANT_ORIGINAL));
     sodium_bin2base64((char*)ret.data(), ret.size(), buf, len, sodium_base64_VARIANT_ORIGINAL);
+    rtrim_null(ret);
     return ret;
 }
 
 static std::vector<uint8_t> base64ToBin(jsi::Runtime& runtime, const std::string& str)
 {
-    // since libsodium doesn't provide the reverse of
-    // sodium_base64_encoded_len(size_t bin_len, int variant)
-    // to estimate bin_maxlen, we set it conservatively to
-    // the size of the base64 representation
     std::vector<uint8_t> ret;
-    ret.resize(str.size());
-    size_t decoded_len;
-    if (sodium_base642bin(ret.data(), ret.size(), str.data(), str.size(), nullptr, &decoded_len, nullptr, sodium_base64_VARIANT_ORIGINAL) != 0)
+    // base64 is 1.25 of the encoded value
+    ret.resize((str.size() / 4) * 3);
+    size_t decoded_len = 0;
+    if (sodium_base642bin(ret.data(), ret.size(), str.data(), str.size(), nullptr, &decoded_len, nullptr, sodium_base64_VARIANT_ORIGINAL) != 0) {
         jsi::detail::throwJSError(runtime, "[react-native-sodium] invalid base64 input");
+    }
     ret.resize(decoded_len);
     return ret;
 }
