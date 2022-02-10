@@ -1,8 +1,11 @@
 import * as React from 'react';
 
-import { StyleSheet, View, Text, NativeModules } from 'react-native';
-import 'react-native-sodium-jsi';
-import base64 from 'base64-js';
+import { StyleSheet, View, Text } from 'react-native';
+import {
+  crypto_aead_xchacha20poly1305_ietf_decrypt,
+  crypto_aead_xchacha20poly1305_ietf_encrypt,
+  crypto_pwhash,
+} from 'react-native-sodium-jsi';
 
 const TestResult: React.FC<{ value: boolean | undefined; name: string }> = (
   props
@@ -23,22 +26,6 @@ export default function App() {
   const [randombytes_buf, setRandomBytesBuf] = React.useState<boolean>();
   const [randombytes_random, setRandomBytesRandom] = React.useState<boolean>();
 
-  // const testRandom2 = () => {
-  //   setRandomBytesBuf(undefined);
-  //   let freq: Array<number> = [];
-  //   for (let i = 0; i < 256; ++i) freq[i] = 0;
-  //   const value = global.randombytes_buf(20 * 256);
-  //   let a = base64.toByteArray(value);
-  //   for (let i = 0; i < a.length; ++i) ++freq[a[i]];
-  //   let fail = false;
-  //   for (let i = 0; i < 256 && !fail; ++i)
-  //     if (!freq[i]) {
-  //       console.log(a, i);
-  //       fail = true;
-  //     }
-  //   setRandomBytesBuf(!fail);
-  // };
-
   React.useEffect(() => {
     const message = 'hello world';
     const key =
@@ -46,7 +33,7 @@ export default function App() {
     const nonce = '404142434445464748494a4b4c4d4e4f5051525354555657';
     const aad = key;
 
-    const encrypted = global.crypto_aead_xchacha20poly1305_ietf_encrypt(
+    const encrypted = crypto_aead_xchacha20poly1305_ietf_encrypt(
       message,
       nonce,
       key,
@@ -55,7 +42,7 @@ export default function App() {
 
     console.log('encrypted', encrypted);
 
-    const decrypted = global.crypto_aead_xchacha20poly1305_ietf_decrypt(
+    const decrypted = crypto_aead_xchacha20poly1305_ietf_decrypt(
       encrypted,
       nonce,
       key,
@@ -68,13 +55,7 @@ export default function App() {
     const bytes = 67108864;
     const length = 16;
     const iterations = 2;
-    const result = global.crypto_pwhash(
-      length,
-      password,
-      salt,
-      iterations,
-      bytes
-    );
+    const result = crypto_pwhash(length, password, salt, iterations, bytes);
     const expectedResult = '720f95400220748a811bca9b8cff5d6e';
     console.log('Argon result', result, 'expected result', expectedResult);
   }, []);

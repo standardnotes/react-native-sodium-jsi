@@ -2,7 +2,7 @@
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
-      "react-native-sodium": ["./src/index"]
+      "react-native-sodium-jsi": ["./src/index"]
     },
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
