@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { StyleSheet, View, Text, NativeModules } from 'react-native';
-import 'react-native-sodium';
+import 'react-native-sodium-jsi';
 import base64 from 'base64-js';
 
 const TestResult: React.FC<{ value: boolean | undefined; name: string }> = (

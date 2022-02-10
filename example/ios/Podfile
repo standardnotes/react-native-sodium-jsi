@@ -12,7 +12,7 @@ target 'SodiumExample' do
     :hermes_enabled => false
   )
 
-  pod 'react-native-sodium', :path => '../..'
+  pod 'react-native-sodium-jsi', :path => '../..'
 
   # Enables Flipper.
   #

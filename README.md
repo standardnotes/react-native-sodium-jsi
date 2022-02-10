@@ -1,4 +1,4 @@
-# react-native-sodium
+# react-native-sodium-jsi
 
 Precompiled binaries of [libsodium](https://libsodium.org) will be linked by default.
 Optionally, you can choose to compile libsodium by yourself (run **npm&nbsp;run&nbsp;rebuild** in package directory). Source code will be downloaded and verified before compilation.
@@ -31,7 +31,7 @@ Optionally, you can choose to compile libsodium by yourself (run **npm&nbsp;run&
 
 Using hermes on Android is required.
 
-1. `npm install react-native-sodium`
+1. `npm install react-native-sodium-jsi`
 2. `npx pod-install ios`
 3. Run your app.
 

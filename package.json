@@ -1,5 +1,5 @@
 {
-  "name": "react-native-sodium",
+  "name": "react-native-sodium-jsi",
   "version": "1.0.0",
   "description": "JSI sodium implementation",
   "main": "lib/commonjs/index",
@@ -13,7 +13,7 @@
     "android",
     "ios",
     "cpp",
-    "react-native-sodium.podspec",
+    "react-native-sodium-jsi.podspec",
     "!lib/typescript/example",
     "!android/build",
     "!ios/build",
@@ -38,13 +38,13 @@
     "ios",
     "android"
   ],
-  "repository": "https://github.com/radko93/react-native-sodium",
+  "repository": "https://github.com/Standardnotes/react-native-sodium-jsi",
   "author": "Radek Czemerys <radko93@gmail.com> (https://github.com/radko93)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/radko93/react-native-sodium/issues"
+    "url": "https://github.com/Standardnotes/react-native-sodium/issues"
   },
-  "homepage": "https://github.com/radko93/react-native-sodium#readme",
+  "homepage": "https://github.com/Standardnotes/react-native-sodium#readme",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
