@@ -82,7 +82,7 @@ template<typename T> T* extractArrayBuffer(jsi::Runtime& runtime, const jsi::Val
 void install(jsi::Runtime& jsiRuntime) {
     std::cout << "Initializing react-native-sodium-jsi" << "\n";
 
-    if (sodium_init() != 0)
+    if (sodium_init() == -1)
         jsi::detail::throwJSError(jsiRuntime, "[react-native-sodium-jsi] sodium_init() failed");
 
     auto jsi_crypto_aead_xchacha20poly1305_ietf_keygen = jsi::Function::createFromHostFunction(
