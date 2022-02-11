@@ -5,6 +5,7 @@ import {
   crypto_aead_xchacha20poly1305_ietf_decrypt,
   crypto_aead_xchacha20poly1305_ietf_encrypt,
   crypto_pwhash,
+  constants,
 } from 'react-native-sodium-jsi';
 
 const TestResult: React.FC<{ value: boolean | undefined; name: string }> = (
@@ -32,6 +33,7 @@ export default function App() {
       '808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9f';
     const nonce = '404142434445464748494a4b4c4d4e4f5051525354555657';
     const aad = key;
+    console.log(constants);
 
     const encrypted = crypto_aead_xchacha20poly1305_ietf_encrypt(
       message,

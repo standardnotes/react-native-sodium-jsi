@@ -8,6 +8,8 @@ if (SodiumNative && typeof SodiumNative.install === 'function') {
   SodiumNative.install();
 }
 
+export const constants = SodiumNative.getConstants();
+
 export function crypto_aead_xchacha20poly1305_ietf_encrypt(
   message: string,
   public_nonce: string,
