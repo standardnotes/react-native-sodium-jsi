@@ -8,7 +8,31 @@ if (SodiumNative && typeof SodiumNative.install === 'function') {
   SodiumNative.install();
 }
 
-export const constants = SodiumNative.getConstants();
+export type SodiumConstants = {
+  crypto_pwhash_ALG_ARGON2I13: number;
+  crypto_pwhash_ALG_ARGON2ID13: number;
+  crypto_pwhash_ALG_DEFAULT: number;
+  crypto_pwhash_BYTES_MAX: number;
+  crypto_pwhash_MEMLIMIT_MAX: number;
+  crypto_pwhash_MEMLIMIT_MIN: number;
+  crypto_pwhash_MEMLIMIT_MODERATE: number;
+  crypto_pwhash_MEMLIMIT_SENSITIVE: number;
+  crypto_pwhash_OPSLIMIT_MAX: number;
+  crypto_pwhash_OPSLIMIT_MIN: number;
+  crypto_pwhash_OPSLIMIT_MODERATE: number;
+  crypto_pwhash_PASSWD_MAX: number;
+  crypto_pwhash_SALTBYTES: number;
+  crypto_aead_xchacha20poly1305_IETF_ABYTES: number;
+  crypto_aead_xchacha20poly1305_IETF_KEYBYTES: number;
+  crypto_aead_xchacha20poly1305_IETF_NPUBBYTES: number;
+  crypto_aead_xchacha20poly1305_IETF_NSECBYTES: number;
+  base64_variant_ORIGINAL: number;
+  base64_variant_VARIANT_ORIGINAL_NO_PADDING: number;
+  base64_variant_VARIANT_URLSAFE: number;
+  base64_variant_VARIANT_URLSAFE_NO_PADDING: number;
+};
+
+export const constants: SodiumConstants = SodiumNative.getConstants();
 
 export function crypto_aead_xchacha20poly1305_ietf_encrypt(
   message: string,
