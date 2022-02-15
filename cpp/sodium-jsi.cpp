@@ -28,24 +28,20 @@ static std::vector<uint8_t> hexToBin(jsi::Runtime& runtime, const std::string& s
     return ret;
 }
 
-void rtrim_null(std::string& str) {
-    str.erase(std::find_if(str.rbegin(), str.rend(), [](int character) {
-        return '\0' != character;
-    }).base(), str.end());
-}
-
 static std::string binToBase64(const uint8_t * buf, size_t len) {
     std::string ret;
     ret.resize(sodium_base64_encoded_len(len, sodium_base64_VARIANT_ORIGINAL));
     sodium_bin2base64((char*)ret.data(), ret.size(), buf, len, sodium_base64_VARIANT_ORIGINAL);
-    rtrim_null(ret);
+    if (ret.size() && ret[ret.size()-1]=='\0') {
+        ret.resize(ret.size()-1); // sodium_bin2base64 appends a nul terminator, drop it
+    }
     return ret;
 }
 
 static std::vector<uint8_t> base64ToBin(jsi::Runtime& runtime, const std::string& str)
 {
     std::vector<uint8_t> ret;
-    // base64 is 1.25 of the encoded value
+    // binary is 0.75x of the base64 string
     ret.resize((str.size() / 4) * 3);
     size_t decoded_len = 0;
     if (sodium_base642bin(ret.data(), ret.size(), str.data(), str.size(), nullptr, &decoded_len, nullptr, sodium_base64_VARIANT_ORIGINAL) != 0) {
@@ -209,9 +205,6 @@ void install(jsi::Runtime& jsiRuntime) {
     );
     jsiRuntime.global().setProperty(jsiRuntime, "crypto_aead_xchacha20poly1305_ietf_decrypt", std::move(jsi_crypto_aead_xchacha20poly1305_ietf_decrypt));
 
-
-
-
     auto jsi_crypto_pwhash = jsi::Function::createFromHostFunction(
         jsiRuntime,
         jsi::PropNameID::forUtf8(jsiRuntime, "crypto_pwhash"),
@@ -248,8 +241,6 @@ void install(jsi::Runtime& jsiRuntime) {
         }
     );
     jsiRuntime.global().setProperty(jsiRuntime, "crypto_pwhash", std::move(jsi_crypto_pwhash));
-
-
 
     auto jsi_crypto_secretstream_xchacha20poly1305_init_push = jsi::Function::createFromHostFunction(
         jsiRuntime,
@@ -315,8 +306,6 @@ void install(jsi::Runtime& jsiRuntime) {
     );
     jsiRuntime.global().setProperty(jsiRuntime, "crypto_secretstream_xchacha20poly1305_push", std::move(jsi_crypto_secretstream_xchacha20poly1305_push));
 
-
-
     auto jsi_crypto_secretstream_xchacha20poly1305_init_pull = jsi::Function::createFromHostFunction(
         jsiRuntime,
         jsi::PropNameID::forUtf8(jsiRuntime, "crypto_secretstream_xchacha20poly1305_init_pull"),
@@ -350,7 +339,6 @@ void install(jsi::Runtime& jsiRuntime) {
         }
     );
     jsiRuntime.global().setProperty(jsiRuntime, "crypto_secretstream_xchacha20poly1305_init_pull", std::move(jsi_crypto_secretstream_xchacha20poly1305_init_pull));
-
 
     auto jsi_crypto_secretstream_xchacha20poly1305_pull = jsi::Function::createFromHostFunction(
         jsiRuntime,
@@ -386,9 +374,41 @@ void install(jsi::Runtime& jsiRuntime) {
         }
     );
     jsiRuntime.global().setProperty(jsiRuntime, "crypto_secretstream_xchacha20poly1305_pull", std::move(jsi_crypto_secretstream_xchacha20poly1305_pull));
+    
+    auto jsi_to_base64 = jsi::Function::createFromHostFunction(
+        jsiRuntime,
+        jsi::PropNameID::forUtf8(jsiRuntime, "to_base64"),
+        1,  // utf8string
+        [](jsi::Runtime& runtime, const jsi::Value& thisValue, const jsi::Value* arguments, size_t count) -> jsi::Value {
+          if (arguments[0].isNull()) {
+              jsi::detail::throwJSError(runtime, "[react-native-sodium-jsi] string cannot be null in to_base64");
+              return {};
+          }
+          
+            std::string utf8string = arguments[1].asString(runtime).utf8(runtime);
+            std::string base64string = binToBase64((uint8_t*)utf8string.data(), utf8string.size());
+            return jsi::String::createFromUtf8(runtime, base64string);
+        }
+    );
+    jsiRuntime.global().setProperty(jsiRuntime, "to_base64", std::move(jsi_to_base64));
 
-
-
+    auto jsi_from_base64 = jsi::Function::createFromHostFunction(
+        jsiRuntime,
+        jsi::PropNameID::forUtf8(jsiRuntime, "from_base64"),
+        1,  // base64string
+        [](jsi::Runtime& runtime, const jsi::Value& thisValue, const jsi::Value* arguments, size_t count) -> jsi::Value {
+          if (arguments[0].isNull()) {
+              jsi::detail::throwJSError(runtime, "[react-native-sodium-jsi] string cannot be null in from_base64");
+              return {};
+          }
+          
+            std::string base64string = arguments[1].asString(runtime).utf8(runtime);
+            std::vector<uint8_t> utf8string = base64ToBin(runtime, base64string);
+            
+            return jsi::String::createFromUtf8(runtime, utf8string.data(), utf8string.size());
+        }
+    );
+    jsiRuntime.global().setProperty(jsiRuntime, "from_base64", std::move(jsi_from_base64));
 }
 
 void cleanup() {}
