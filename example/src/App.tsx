@@ -6,6 +6,8 @@ import {
   crypto_aead_xchacha20poly1305_ietf_encrypt,
   crypto_pwhash,
   constants,
+  to_base64,
+  from_base64,
 } from 'react-native-sodium-jsi';
 
 const TestResult: React.FC<{ value: boolean | undefined; name: string }> = (
@@ -60,6 +62,10 @@ export default function App() {
     const result = crypto_pwhash(length, password, salt, iterations, bytes);
     const expectedResult = '720f95400220748a811bca9b8cff5d6e';
     console.log('Argon result', result, 'expected result', expectedResult);
+
+    const base64 = to_base64(password);
+    const fromBase64 = from_base64(base64);
+    console.log('base64', fromBase64, 'expected', password);
   }, []);
 
   return (
