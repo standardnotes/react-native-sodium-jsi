@@ -385,7 +385,7 @@ void install(jsi::Runtime& jsiRuntime) {
               return {};
           }
           
-            std::string utf8string = arguments[1].asString(runtime).utf8(runtime);
+            std::string utf8string = arguments[0].asString(runtime).utf8(runtime);
             std::string base64string = binToBase64((uint8_t*)utf8string.data(), utf8string.size());
             return jsi::String::createFromUtf8(runtime, base64string);
         }
@@ -402,7 +402,7 @@ void install(jsi::Runtime& jsiRuntime) {
               return {};
           }
           
-            std::string base64string = arguments[1].asString(runtime).utf8(runtime);
+            std::string base64string = arguments[0].asString(runtime).utf8(runtime);
             std::vector<uint8_t> utf8string = base64ToBin(runtime, base64string);
             
             return jsi::String::createFromUtf8(runtime, utf8string.data(), utf8string.size());

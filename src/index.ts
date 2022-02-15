@@ -109,3 +109,17 @@ export function randombytes_random(): number {
   }
   throw Error('[react-native-sodium-jsi] native module not accesible');
 }
+
+export function to_base64(message: string): string {
+  if (typeof g.to_base64 !== 'undefined') {
+    return g.to_base64(message);
+  }
+  throw Error('[react-native-sodium-jsi] native module not accesible');
+}
+
+export function from_base64(cipher: string): string {
+  if (typeof g.from_base64 !== 'undefined') {
+    return g.from_base64(cipher);
+  }
+  throw Error('[react-native-sodium-jsi] native module not accesible');
+}
