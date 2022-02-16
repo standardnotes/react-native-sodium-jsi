@@ -1,4 +1,6 @@
-const g = global as any;
+declare const global: any;
+
+const g = global;
 
 import { NativeModules } from 'react-native';
 
