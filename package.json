@@ -1,7 +1,7 @@
 {
   "name": "react-native-sodium-jsi",
   "version": "1.0.0",
-  "description": "JSI sodium implementation",
+  "description": "React Native JSI Libsodium Implementation",
   "source": "src/index.ts",
   "main": "src/index.ts",
   "files": [
@@ -33,13 +33,13 @@
     "ios",
     "android"
   ],
-  "repository": "https://github.com/Standardnotes/react-native-sodium-jsi",
+  "repository": "https://github.com/standardnotes/react-native-sodium-jsi",
   "author": "Radek Czemerys <radko93@gmail.com> (https://github.com/radko93)",
-  "license": "MIT",
+  "license": "AGPLv3",
   "bugs": {
-    "url": "https://github.com/Standardnotes/react-native-sodium/issues"
+    "url": "https://github.com/standardnotes/react-native-sodium-jsi/issues"
   },
-  "homepage": "https://github.com/Standardnotes/react-native-sodium#readme",
+  "homepage": "https://github.com/standardnotes/react-native-sodium-jsi#readme",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
