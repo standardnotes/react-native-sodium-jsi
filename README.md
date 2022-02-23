@@ -1,7 +1,19 @@
 # react-native-sodium-jsi
 
 Precompiled binaries of [libsodium](https://libsodium.org) will be linked by default.
+
 Optionally, you can choose to compile libsodium by yourself (run **npm&nbsp;run&nbsp;rebuild** in package directory). Source code will be downloaded and verified before compilation.
+
+Supported Libsodium functions:
+
+- `crypto_aead_xchacha20poly1305_ietf_encrypt`
+- `crypto_aead_xchacha20poly1305_ietf_decrypt`
+- `crypto_pwhash`
+- `crypto_aead_xchacha20poly1305_ietf_keygen`
+- `randombytes_buf`
+- `randombytes_random`
+- `to_base64`
+- `from_base64`
 
 ### Source compilation
 
@@ -40,7 +52,3 @@ Using hermes on Android is required.
 1. `yarn bootstrap`
 2. `yarn example`
 3. `yarn ios` or `yarn android`
-
-### Credits
-
-JSI setup inspired by [@mrousavy](https://github.com/mrousavy).
