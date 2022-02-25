@@ -127,7 +127,7 @@ export function crypto_secretstream_xchacha20poly1305_push(
   if (typeof g.crypto_secretstream_xchacha20poly1305_push !== 'undefined') {
     return g.crypto_secretstream_xchacha20poly1305_push(
       encryptor.state,
-      plainBuffer,
+      plainBuffer.buffer,
       assocData,
       tag
     );
@@ -160,7 +160,7 @@ export function crypto_secretstream_xchacha20poly1305_pull(
   if (typeof g.crypto_secretstream_xchacha20poly1305_pull !== 'undefined') {
     const result = g.crypto_secretstream_xchacha20poly1305_pull(
       decryptor.state,
-      encryptedBuffer,
+      encryptedBuffer.buffer,
       assocData
     );
 
