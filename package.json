@@ -1,6 +1,6 @@
 {
   "name": "react-native-sodium-jsi",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "React Native JSI Libsodium Implementation",
   "source": "src/index.ts",
   "main": "src/index.ts",
@@ -11,6 +11,7 @@
     "ios",
     "cpp",
     "react-native-sodium-jsi.podspec",
+    "precompiled.tgz",
     "!lib/typescript/example",
     "!android/build",
     "!ios/build",
