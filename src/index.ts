@@ -2,6 +2,17 @@ declare const global: any;
 
 const g = global;
 
+import type {
+  Base64String,
+  HexString,
+  StreamDecryptor,
+  StreamDecryptorResult,
+  StreamEncryptor,
+  Utf8String,
+} from '@standardnotes/sncrypto-common';
+
+import { SodiumConstant } from '@standardnotes/sncrypto-common';
+
 import { NativeModules } from 'react-native';
 
 const SodiumNative = NativeModules.Sodium;
@@ -95,6 +106,70 @@ export function crypto_aead_xchacha20poly1305_ietf_keygen(): string {
   if (typeof g.crypto_aead_xchacha20poly1305_ietf_keygen !== 'undefined') {
     return g.crypto_aead_xchacha20poly1305_ietf_keygen();
   }
+  throw Error('[react-native-sodium-jsi] native module not accesible');
+}
+
+export function crypto_secretstream_xchacha20poly1305_init_push(
+  key: HexString
+): StreamEncryptor {
+  if (typeof g.crypto_aead_xchacha20poly1305_ietf_keygen !== 'undefined') {
+    return g.crypto_secretstream_xchacha20poly1305_init_push(key);
+  }
+  throw Error('[react-native-sodium-jsi] native module not accesible');
+}
+
+export function crypto_secretstream_xchacha20poly1305_push(
+  encryptor: StreamEncryptor,
+  plainBuffer: Uint8Array,
+  assocData: Utf8String,
+  tag: SodiumConstant = SodiumConstant.CRYPTO_SECRETSTREAM_XCHACHA20POLY1305_TAG_PUSH
+): Uint8Array {
+  if (typeof g.crypto_secretstream_xchacha20poly1305_push !== 'undefined') {
+    return g.crypto_secretstream_xchacha20poly1305_push(
+      encryptor.state,
+      plainBuffer,
+      assocData,
+      tag
+    );
+  }
+  throw Error('[react-native-sodium-jsi] native module not accesible');
+}
+
+export function crypto_secretstream_xchacha20poly1305_init_pull(
+  header: Base64String,
+  key: HexString
+): StreamDecryptor {
+  if (
+    typeof g.crypto_secretstream_xchacha20poly1305_init_pull !== 'undefined'
+  ) {
+    const state = g.crypto_secretstream_xchacha20poly1305_init_pull(
+      header,
+      key
+    );
+
+    return { state };
+  }
+  throw Error('[react-native-sodium-jsi] native module not accesible');
+}
+
+export function crypto_secretstream_xchacha20poly1305_pull(
+  decryptor: StreamDecryptor,
+  encryptedBuffer: Uint8Array,
+  assocData: Utf8String
+): StreamDecryptorResult | false {
+  if (typeof g.crypto_secretstream_xchacha20poly1305_pull !== 'undefined') {
+    const result = g.crypto_secretstream_xchacha20poly1305_pull(
+      decryptor.state,
+      encryptedBuffer,
+      assocData
+    );
+
+    if ((result as unknown) === false) {
+      return false;
+    }
+    return result;
+  }
+
   throw Error('[react-native-sodium-jsi] native module not accesible');
 }
 
