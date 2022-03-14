@@ -350,13 +350,13 @@ void install(jsi::Runtime &jsiRuntime)
                 jsi::detail::throwJSError(runtime, "[react-native-sodium-jsi] crypto_secretstream_xchacha20poly1305_init_pull arguments are null");
             }
 
-            std::vector<uint8_t> header = base64ToBin(runtime, arguments[1].asString(runtime).utf8(runtime));
+            std::vector<uint8_t> header = base64ToBin(runtime, arguments[0].asString(runtime).utf8(runtime));
             if (header.size() != crypto_secretstream_xchacha20poly1305_HEADERBYTES)
             {
                 jsi::detail::throwJSError(runtime, "[react-native-sodium-jsi] crypto_secretstream_xchacha20poly1305_init_pull wrong header length");
             }
 
-            std::vector<uint8_t> key = hexToBin(runtime, arguments[0].asString(runtime).utf8(runtime));
+            std::vector<uint8_t> key = hexToBin(runtime, arguments[1].asString(runtime).utf8(runtime));
             if (key.size() != crypto_secretstream_xchacha20poly1305_keybytes())
             {
                 jsi::detail::throwJSError(runtime, "[react-native-sodium-jsi] crypto_secretstream_xchacha20poly1305_init_push wrong key length");
