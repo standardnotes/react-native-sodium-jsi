@@ -5,9 +5,6 @@ const g = global;
 import type {
   Base64String,
   HexString,
-  StreamDecryptor,
-  StreamDecryptorResult,
-  StreamEncryptor,
   Utf8String,
 } from '@standardnotes/sncrypto-common';
 
@@ -20,6 +17,20 @@ const SodiumNative = NativeModules.Sodium;
 if (SodiumNative && typeof SodiumNative.install === 'function') {
   SodiumNative.install();
 }
+
+export type MobileStreamEncryptor = {
+  state: ArrayBuffer;
+  header: Base64String;
+};
+
+export type MobileStreamDecryptor = {
+  state: ArrayBuffer;
+};
+
+export type MobileStreamDecryptorResult = {
+  message: ArrayBuffer;
+  tag: SodiumConstant;
+};
 
 export type SodiumConstants = {
   crypto_pwhash_ALG_ARGON2I13: number;
@@ -111,7 +122,7 @@ export function crypto_aead_xchacha20poly1305_ietf_keygen(): string {
 
 export function crypto_secretstream_xchacha20poly1305_init_push(
   key: HexString
-): StreamEncryptor {
+): MobileStreamEncryptor {
   if (typeof g.crypto_aead_xchacha20poly1305_ietf_keygen !== 'undefined') {
     return g.crypto_secretstream_xchacha20poly1305_init_push(key);
   }
@@ -119,15 +130,15 @@ export function crypto_secretstream_xchacha20poly1305_init_push(
 }
 
 export function crypto_secretstream_xchacha20poly1305_push(
-  encryptor: StreamEncryptor,
-  plainBuffer: Uint8Array,
+  encryptor: MobileStreamEncryptor,
+  plainBuffer: ArrayBuffer,
   assocData: Utf8String,
   tag: SodiumConstant = SodiumConstant.CRYPTO_SECRETSTREAM_XCHACHA20POLY1305_TAG_PUSH
-): Uint8Array {
+): ArrayBuffer {
   if (typeof g.crypto_secretstream_xchacha20poly1305_push !== 'undefined') {
     return g.crypto_secretstream_xchacha20poly1305_push(
       encryptor.state,
-      plainBuffer.buffer,
+      plainBuffer,
       assocData,
       tag
     );
@@ -138,7 +149,7 @@ export function crypto_secretstream_xchacha20poly1305_push(
 export function crypto_secretstream_xchacha20poly1305_init_pull(
   header: Base64String,
   key: HexString
-): StreamDecryptor {
+): MobileStreamDecryptor {
   if (
     typeof g.crypto_secretstream_xchacha20poly1305_init_pull !== 'undefined'
   ) {
@@ -153,14 +164,14 @@ export function crypto_secretstream_xchacha20poly1305_init_pull(
 }
 
 export function crypto_secretstream_xchacha20poly1305_pull(
-  decryptor: StreamDecryptor,
-  encryptedBuffer: Uint8Array,
+  decryptor: MobileStreamDecryptor,
+  encryptedBuffer: ArrayBuffer,
   assocData: Utf8String
-): StreamDecryptorResult | false {
+): MobileStreamDecryptorResult | false {
   if (typeof g.crypto_secretstream_xchacha20poly1305_pull !== 'undefined') {
     const result = g.crypto_secretstream_xchacha20poly1305_pull(
       decryptor.state,
-      encryptedBuffer.buffer,
+      encryptedBuffer,
       assocData
     );
 
