@@ -142,12 +142,12 @@ export function crypto_secretstream_xchacha20poly1305_init_pull(
   if (
     typeof g.crypto_secretstream_xchacha20poly1305_init_pull !== 'undefined'
   ) {
-    const state = g.crypto_secretstream_xchacha20poly1305_init_pull(
+    const decryptor = g.crypto_secretstream_xchacha20poly1305_init_pull(
       header,
       key
     );
 
-    return { state };
+    return decryptor;
   }
   throw Error('[react-native-sodium-jsi] native module not accesible');
 }

@@ -285,12 +285,12 @@ void install(jsi::Runtime &jsiRuntime)
                 jsi::detail::throwJSError(runtime, "[react-native-sodium-jsi] crypto_secretstream_xchacha20poly1305_init_push wrong key length");
             }
 
-            jsi::Value arraybuf = createArrayBuffer(runtime, sizeof(crypto_secretstream_xchacha20poly1305_state));
-            auto st = extractArrayBuffer<crypto_secretstream_xchacha20poly1305_state>(runtime, arraybuf);
+            jsi::Value state = createArrayBuffer(runtime, sizeof(crypto_secretstream_xchacha20poly1305_state));
+            auto state_pointer = extractArrayBuffer<crypto_secretstream_xchacha20poly1305_state>(runtime, state);
 
             uint8_t header[crypto_secretstream_xchacha20poly1305_HEADERBYTES];
 
-            int result = crypto_secretstream_xchacha20poly1305_init_push(st, header, k.data());
+            int result = crypto_secretstream_xchacha20poly1305_init_push(state_pointer, header, k.data());
             if (result != 0)
             {
                 return jsi::Value(nullptr);
@@ -299,7 +299,7 @@ void install(jsi::Runtime &jsiRuntime)
             {
                 // returns {state: crypto_secretstream_xchacha20poly1305_state, header: base64 string}
                 jsi::Object ret(runtime);
-                ret.setProperty(runtime, "state", arraybuf);
+                ret.setProperty(runtime, "state", state);
                 ret.setProperty(runtime, "header", jsi::String::createFromUtf8(runtime, binToBase64(header, sizeof(header))));
                 return ret;
             }
@@ -317,7 +317,7 @@ void install(jsi::Runtime &jsiRuntime)
                 jsi::detail::throwJSError(runtime, "[react-native-sodium-jsi] crypto_secretstream_xchacha20poly1305_push arguments are null");
             }
 
-            auto *st = extractArrayBuffer<crypto_secretstream_xchacha20poly1305_state>(runtime, arguments[0]);
+            auto *state_pointer = extractArrayBuffer<crypto_secretstream_xchacha20poly1305_state>(runtime, arguments[0]);
             jsi::ArrayBuffer message = asArrayBuffer(runtime, arguments[1]);
             std::string assoc_data = arguments[2].asString(runtime).utf8(runtime);
             uint8_t tag = arguments[3].asNumber();
@@ -326,7 +326,7 @@ void install(jsi::Runtime &jsiRuntime)
             jsi::Value ret = createArrayBuffer(runtime, ret_size);
             uint8_t *ret_ptr = extractArrayBuffer(runtime, ret, ret_size);
 
-            int result = crypto_secretstream_xchacha20poly1305_push(st, ret_ptr, nullptr, message.data(runtime), message.size(runtime), (uint8_t *)assoc_data.data(), assoc_data.size(), tag);
+            int result = crypto_secretstream_xchacha20poly1305_push(state_pointer, ret_ptr, nullptr, message.data(runtime), message.size(runtime), (uint8_t *)assoc_data.data(), assoc_data.size(), tag);
             if (result != 0)
             {
                 return jsi::Value(nullptr);
@@ -362,18 +362,19 @@ void install(jsi::Runtime &jsiRuntime)
                 jsi::detail::throwJSError(runtime, "[react-native-sodium-jsi] crypto_secretstream_xchacha20poly1305_init_push wrong key length");
             }
 
-            jsi::Value arraybuf = createArrayBuffer(runtime, sizeof(crypto_secretstream_xchacha20poly1305_state));
-            auto st = extractArrayBuffer<crypto_secretstream_xchacha20poly1305_state>(runtime, arraybuf);
+            jsi::Value state = createArrayBuffer(runtime, sizeof(crypto_secretstream_xchacha20poly1305_state));
+            auto state_pointer = extractArrayBuffer<crypto_secretstream_xchacha20poly1305_state>(runtime, state);
 
-            int result = crypto_secretstream_xchacha20poly1305_init_pull(st, header.data(), key.data());
+            int result = crypto_secretstream_xchacha20poly1305_init_pull(state_pointer, header.data(), key.data());
             if (result != 0)
             {
                 return jsi::Value(nullptr);
             }
             else
             {
-                // returns crypto_secretstream_xchacha20poly1305_state
-                return arraybuf;
+                jsi::Object ret(runtime);
+                ret.setProperty(runtime, "state", state);
+                return ret;
             }
         });
     jsiRuntime.global().setProperty(jsiRuntime, "crypto_secretstream_xchacha20poly1305_init_pull", std::move(jsi_crypto_secretstream_xchacha20poly1305_init_pull));
@@ -389,29 +390,29 @@ void install(jsi::Runtime &jsiRuntime)
                 jsi::detail::throwJSError(runtime, "[react-native-sodium-jsi] crypto_secretstream_xchacha20poly1305_pull arguments are null");
             }
 
-            auto *st = extractArrayBuffer<crypto_secretstream_xchacha20poly1305_state>(runtime, arguments[0]);
+            auto *state_pointer = extractArrayBuffer<crypto_secretstream_xchacha20poly1305_state>(runtime, arguments[0]);
             jsi::ArrayBuffer ciphertext = asArrayBuffer(runtime, arguments[1]);
             std::string assoc_data = arguments[2].asString(runtime).utf8(runtime);
 
             if (ciphertext.size(runtime) < crypto_secretstream_xchacha20poly1305_ABYTES)
                 jsi::detail::throwJSError(runtime, "[react-native-sodium-jsi] crypto_secretstream_xchacha20poly1305_pull too short ciphertext");
             size_t ret_size = ciphertext.size(runtime) - crypto_secretstream_xchacha20poly1305_ABYTES;
-            jsi::Value ret = createArrayBuffer(runtime, ret_size);
-            uint8_t *ret_ptr = extractArrayBuffer(runtime, ret, ret_size);
+            jsi::Value message = createArrayBuffer(runtime, ret_size);
+            uint8_t *message_ptr = extractArrayBuffer(runtime, message, ret_size);
             uint8_t tag;
 
-            int result = crypto_secretstream_xchacha20poly1305_pull(st, ret_ptr, nullptr, &tag, ciphertext.data(runtime), ciphertext.size(runtime), (uint8_t *)assoc_data.data(), assoc_data.size());
-            if (result != 0)
+            int result_flag = crypto_secretstream_xchacha20poly1305_pull(state_pointer, message_ptr, nullptr, &tag, ciphertext.data(runtime), ciphertext.size(runtime), (uint8_t *)assoc_data.data(), assoc_data.size());
+            if (result_flag != 0)
             {
                 return jsi::Value(nullptr);
             }
             else
             {
                 // returns { message: Uint8Array; tag: int/CRYPTO_SECRETSTREAM_XCHACHA20POLY1305_TAG }
-                jsi::Object ret(runtime);
-                ret.setProperty(runtime, "message", ret);
-                ret.setProperty(runtime, "tag", (int)tag);
-                return ret;
+                jsi::Object return_value(runtime);
+                return_value.setProperty(runtime, "message", message);
+                return_value.setProperty(runtime, "tag", (int)tag);
+                return return_value;
             }
         });
     jsiRuntime.global().setProperty(jsiRuntime, "crypto_secretstream_xchacha20poly1305_pull", std::move(jsi_crypto_secretstream_xchacha20poly1305_pull));
